@@ -2,11 +2,13 @@
 
 enum USB_STATUS usb_status = NORMAL;
 
+/* constructor */
 commUSB::commUSB()
 {
 
 }
 
+/* destructor */
 commUSB::~commUSB()
 {
     /* close the device */
@@ -15,6 +17,7 @@ commUSB::~commUSB()
     hid_exit();
 }
 
+/* initialization function */
 void commUSB::commUSBInit()
 {
     int res;
@@ -27,7 +30,7 @@ void commUSB::commUSBInit()
         usb_status = ERROR;
     }
         
-    // Open the device using the VID, PID, and optionally the Serial number.
+    /* open the device using the VID, PID, and optionally the Serial number */
     handle = hid_open(USB_VENDOR_ID , USB_PRODUCT_ID , NULL);
     if(handle == NULL)
     {
@@ -35,8 +38,7 @@ void commUSB::commUSBInit()
         usb_status = ERROR;
     }
         
-
-    // Read the Manufacturer String
+    /* read the manufacturer string */
     res = hid_get_manufacturer_string(handle , wstr , MAX_STR);
     if(res == -1)
     {
@@ -48,7 +50,7 @@ void commUSB::commUSBInit()
         wprintf(L"Manufacturer String: %s\n" , wstr);
     #endif
     
-    // Read the Product String
+    /* read the product string */
     res = hid_get_product_string(handle , wstr , MAX_STR);
     if(res == -1)
     {
@@ -59,7 +61,7 @@ void commUSB::commUSBInit()
         wprintf(L"Product String: %s\n" , wstr);
     #endif
 
-    // Read the Serial Number String
+    /* read the serial number string */
     res = hid_get_serial_number_string(handle , wstr , MAX_STR);
     if(res == -1)
     {
@@ -70,7 +72,7 @@ void commUSB::commUSBInit()
         wprintf(L"Serial Number String: (%d) %s\n" , wstr[0] , wstr);
     #endif
 
-    // Read Indexed String 1
+    /* read indexed string 1 */
     res = hid_get_indexed_string(handle , 1 , wstr , MAX_STR);
     if(res == -1)
     {
@@ -82,28 +84,30 @@ void commUSB::commUSBInit()
     #endif
 }
 
+/* tranform function */
 void commUSB::commUSBWrite()
 {
     hid_write(handle , txbuf , TX_DATA_LEN);
 }
 
+/* receive function */
 void commUSB::commUSBRead()
 {
     hid_read(handle , rxbuf , RX_DATA_LEN);
 }
 
+/* print tx data & rx data info */
 void commUSB::commUSBPrintResult()
 {
-    // Print out the returned buffer.
+    /* print the tx data */
     for (int i = 0 ; i < TX_DATA_LEN ; i++)
     {
         std::cout << "txbuf[ " << i << " ]: " << txbuf[i] << std::endl;
     }
         
-    // Print out the returned buffer.
+    /* print the rx data */
     for (int i = 0 ; i < RX_DATA_LEN ; i++)
     {
         std::cout << "rxbuf[ " << i << " ]: " << rxbuf[i] << std::endl;
     }
 }
-

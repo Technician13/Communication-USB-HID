@@ -1,12 +1,8 @@
-#include "parameters.hpp"
-
-
-#ifndef _MCUCOMM_H
-#define _MCUCOMM_H
+#ifndef MCUCOMM_HPP
+#define MCUCOMM_HPP
 
 #include <iostream>
-#include "cppStruct.h"
-
+#include "commUSB.hpp"
 extern "C" 
 {
 	#include <stdlib.h>
@@ -15,57 +11,46 @@ extern "C"
 	#include <stdarg.h>
 }
 
-#include "commUSB.hpp"
-
+/* a little redundant operation... */
 #define MCU_COMMU_TX_LENGTH TX_DATA_LEN
 #define MCU_COMMU_RX_LENGTH RX_DATA_LEN
 
-/******************С���Ժ�����֮��*************************/
-typedef struct
-{
-	legMsg_t lf;
-	legMsg_t lr;
-	legMsg_t rf;
-	legMsg_t rr;
-	imu_t imu;
-	float m_w_speed;
-}slaveMsg_t;
+/* ******************************** option start ******************************** */
+/* print tx frame data info in float */
+// #define USB_TEST_TX_FRAME_DATA_FLOAT
+/* print tx frame data info in char */
+// #define USB_TEST_TX_FRAME_DATA_CHAR
+/* print tx frame info in char */
+// #define USB_TEST_TX_FRAME_CHAR
 
-typedef struct
-{	
-	legAngle_t lf_angle;
-	legAngle_t lr_angle;
-	legAngle_t rf_angle;
-	legAngle_t rr_angle;
-	uint8_t blank[52];
+/* print rx frame info */
+// #define USB_TEST_RX_FRAME_DATA_FLOAT
+/* print rx frame data info in char */
+// #define USB_TEST_RX_FRAME_DATA_CHAR
+/* print rx frame info in char */
+// #define USB_TEST_RX_FRAME_CHAR
 
-	float m_w_torque;
-}hostMsg_t;
-
-extern int dev_fd;
+/* time counting */
+// #define PRINT_COMMU_TIME
+/* ******************************** option end ******************************** */
 
 class MCU_Comm
 {
-public:
-	slaveMsg_t slaveMsg = { 0 };
-	hostMsg_t hostMsg = { 0 };
-	commUSB *commusb;
+	private:
 
-	explicit MCU_Comm(void);
-	virtual ~MCU_Comm(void);
-	// void WaitMcuPrepare(void);
-	void Communicate2Mcu();
+	protected:
+	
+	public:
+		commUSB *commusb;
 
-	void WriteUSBData(char* data);
-	void ReadUSBData(char* data);
+		char usb_tx_transdata[MCU_COMMU_TX_LENGTH - 6] = { 0 };
+		char usb_rx_transdata[MCU_COMMU_RX_LENGTH - 5] = { 0 };
 
-protected:
-
-private:
-	char usb_tx_transdata[MCU_COMMU_TX_LENGTH - 6] = { 0 };
-	char usb_rx_transdata[MCU_COMMU_RX_LENGTH - 5] = { 0 };
+		explicit MCU_Comm(void);
+		virtual ~MCU_Comm(void);
+		void Communicate2Mcu();
+		void WriteUSBData(char* data);
+		void ReadUSBData(char* data);	
 };
 
-
-#endif // _MCUCOMM_H
-
+#endif
