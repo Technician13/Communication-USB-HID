@@ -1,5 +1,5 @@
 # communication scheme based on USB HID    
-* This item gives an example, which can be modified by users.      
+* This project gives an example, which can be modified by users.      
 * Every block during `option start` and `option end` should be modified by users according to the actual situation, where contains necessary parameters, printing options and specific communication frame content.
 * Provide simple shift checking function.    
 * Need to pre install dependency `hidapi`, which address is:    
